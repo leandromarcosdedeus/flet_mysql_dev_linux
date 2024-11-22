@@ -52,3 +52,13 @@ def insert_user(name, email, password):
     conn.commit()
     cursor.nextset()
     return "Usuário " + name+ " inserido com sucesso!"
+
+def delete(id):
+    try:
+        query = "DELETE FROM users WHERE id = %s"
+        cursor.execute(query, (id,))
+        cursor.nextset()  
+        conn.commit()  
+        return "Usuário deletado com sucesso!"
+    except Exception as e:
+        return f"Erro ao deletar usuário: {e}"
