@@ -20,12 +20,26 @@ def main(page: Page):
 
 
 
-        dynamic_fields = [ft.TextField(label=i, width=100) for i in headers]
-        page.add(Row(controls=[
-            *dynamic_fields,
-            ft.ElevatedButton(text="Cadastrar", on_click=register),
-            ft.ElevatedButton(text="Voltar", on_click=show_main_layout)
-        ]))
+        dynamic_fields = [ft.TextField(label=i, width=200) for i in headers]
+        dynamic_fields.pop(0)
+        page.add(Column(controls=[
+             ft.Column(controls=[
+                 *dynamic_fields,
+             ],
+                  alignment=ft.MainAxisAlignment.CENTER,
+             ),
+             ft.Row( controls=[
+                    ft.ElevatedButton(text="Cadastrar", on_click=register, bgcolor="white", color="black"),
+                    ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="black")
+             ],
+                  alignment=ft.MainAxisAlignment.CENTER,
+             )
+            
+        ], alignment=ft.MainAxisAlignment.CENTER,
+         horizontal_alignment=ft.CrossAxisAlignment.CENTER,  
+        expand=True  ),
+        )
+
         page.update()
         
     def editar(e, id, name, email):
@@ -45,7 +59,7 @@ def main(page: Page):
         page.add(Row(controls=[
             *dynamic_fields,
             ft.ElevatedButton(text="Atualizar", on_click=edit),
-            ft.ElevatedButton(text="Voltar", on_click=show_main_layout)
+            ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="red")
         ]))
         page.update()
 
@@ -94,8 +108,8 @@ def main(page: Page):
                     *[DataCell(ft.Text(str(cell))) for cell in row],  
                     DataCell(  
                         ft.IconButton(
-                            icon=ft.icons.DELETE,  
-                            on_click=lambda e, id=row[0]: delete_item(id, e),
+                            icon=ft.icons.DELETE,
+                            on_click=lambda e, id=row[0]: delete_item(id, e)
                         )
                     ),
                     DataCell(  
@@ -121,7 +135,7 @@ def main(page: Page):
                     ],
                     height=400,  
                 ),
-                ft.ElevatedButton(text="Voltar", on_click=show_main_layout)
+            ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="red")
         ])
         )
         page.update()
