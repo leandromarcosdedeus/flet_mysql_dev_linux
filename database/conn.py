@@ -15,14 +15,13 @@ cursor = conn.cursor()
 
 def tableHeader():
     cursor.execute('select * from users')
-    exclude_columns = {'id', 'remember_token', 'created_at', 'updated_at', 'email_verified_at'}  # Colunas a serem excluídas
+    exclude_columns = {'remember_token', 'created_at', 'updated_at', 'email_verified_at'}  
     column_names = []
 
     for linha in cursor.description:
-        if linha[0] not in exclude_columns:  # Verifica se a coluna não está na lista de exclusão
+        if linha[0] not in exclude_columns:  
             column_names.append(linha[0])
 
-    print(column_names)
     cursor.nextset()
 
     return column_names
@@ -30,15 +29,13 @@ def tableHeader():
 def getAll():
     cursor.execute('select * from users')
     results = cursor.fetchall()
-    headers = tableHeader()  # Obtemos os nomes das colunas
-    data = []
-
-    for row in results:
-        row_data = {headers[i]: row[i] for i in range(len(headers))}  # Cria um dicionário com header como chave
-        data.append(row_data)
+    headers = tableHeader()  
+    
+    data = [[row[i] for i in range(len(headers))] for row in results]
     
     cursor.nextset()
     return data
+
 
 
 def insert_user(name, email, password):
@@ -50,10 +47,8 @@ def insert_user(name, email, password):
     VALUES (%s, %s, %s)
     """
 
-    # Executando a query com os valores
     cursor.execute(query, (name, email, hashed_password))
 
     conn.commit()
     cursor.nextset()
-
-    print("Usuário inserido com sucesso!")
+    return "Usuário " + name+ " inserido com sucesso!"
