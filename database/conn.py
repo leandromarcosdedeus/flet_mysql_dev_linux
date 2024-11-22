@@ -62,3 +62,12 @@ def delete(id):
         return "Usuário deletado com sucesso!"
     except Exception as e:
         return f"Erro ao deletar usuário: {e}"
+    
+def update(values):
+    query = "UPDATE users SET name = %s, email = %s, password = %s WHERE id = %s"
+    
+    params = (values[1].value, values[2].value, values[3].value, values[0].value)
+
+    print("Query:", query)
+    print("Parâmetros:", params)
+    cursor.execute(query,params)

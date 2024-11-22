@@ -4,13 +4,10 @@ from database import conn
 
 def main(page: Page):
     page.controls.clear()
+    page.bgcolor = "white"
     page.title = "Cadastro de Funcionário"
 
     headers = conn.tableHeader()
-
-    dict_values = {
-        'name': '', 'email': '', 'password': ''
-    }
 
     #funcoes para cadastro
     def create(e):
@@ -30,24 +27,85 @@ def main(page: Page):
             ft.ElevatedButton(text="Voltar", on_click=show_main_layout)
         ]))
         page.update()
+        
+    def editar(e, id, name, email):
+        page.controls.clear()
+        def edit(e):
+            insert = conn.update(dynamic_fields)
+            page.add(ft.Text(insert))
+            get(e)
+
+
+        dynamic_fields = [ft.TextField(label=i, width=100) for i in headers]
+        
+        dynamic_fields[0].value = id
+        dynamic_fields[0].read_only=True
+        dynamic_fields[1].value = name
+        dynamic_fields[2].value = email 
+        page.add(Row(controls=[
+            *dynamic_fields,
+            ft.ElevatedButton(text="Atualizar", on_click=edit),
+            ft.ElevatedButton(text="Voltar", on_click=show_main_layout)
+        ]))
+        page.update()
 
     #main menu
     def show_main_layout(e):
         page.controls.clear()
-        page.add(Column(controls=[
-            ft.ElevatedButton(text="Cadastrar", on_click=create),
-            ft.ElevatedButton(text="Listar", on_click=get)
-        ]))
+        image = ft.Image(src="https://preview.redd.it/gen-1-pokemon-cassette-sleeves-legit-just-posted-the-1st-v0-sg3id3cq1ewc1.png?width=640&crop=smart&auto=webp&s=0e4291886619c7c6227ab7d09c66d70ee6f4d1d4", width=300, height=200)
+        page.add(
+        ft.Column(
+            controls=[
+                ft.Row(
+                    controls=[image],
+                    alignment=ft.MainAxisAlignment.CENTER
+                ),
+                ft.Row(
+                    controls=[
+                        ft.ElevatedButton(text="Cadastrar", on_click=create, bgcolor="white", color="red"),
+                        ft.ElevatedButton(text="Listar", on_click=get, bgcolor="white", color="red")
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                )
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,  
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,  
+            expand=True  
+        )
+    )
         page.update()
 
+    def delete_item(id, e):
+            conn.delete(id)
+            print(f'Item com ID {id} deletado com sucesso!')
+            get(e)
     def get(e):
         data = conn.getAll()
         page.controls.clear()
 
         print(data)
-        columns = [DataColumn(label=ft.Text(header)) for header in headers]
+        columns = [DataColumn(label=ft.Text(header)) for header in headers]        
+        columns.append(DataColumn(label=ft.Text("Excluir", style="color: white; font-weight: bold")))
+        columns.append(DataColumn(label=ft.Text("Editar", style="color: white; font-weight: bold")))
+
         rows = [
-            DataRow(cells=[DataCell(ft.Text(str(cell))) for cell in row])
+            DataRow(
+                cells=[
+                    *[DataCell(ft.Text(str(cell))) for cell in row],  
+                    DataCell(  
+                        ft.IconButton(
+                            icon=ft.icons.DELETE,  
+                            on_click=lambda e, id=row[0]: delete_item(id, e),
+                        )
+                    ),
+                    DataCell(  
+                        ft.IconButton(
+                            icon=ft.icons.EDIT,  
+                            on_click=lambda e, id=row[0], name=row[1], email=row[2], password=row[3]: editar(e, id, name, email),
+                        )
+                    ),
+                ]
+            )
             for row in data
         ]
 
@@ -69,10 +127,30 @@ def main(page: Page):
         page.update()
 
     # Adiciona os botões "Cadastrar" e "Listar"
-    page.add(Column(controls=[
-        ft.ElevatedButton(text="Cadastrar", on_click=create),
-        ft.ElevatedButton(text="Listar", on_click=get)
-    ]))
+    image = ft.Image(src="https://preview.redd.it/gen-1-pokemon-cassette-sleeves-legit-just-posted-the-1st-v0-sg3id3cq1ewc1.png?width=640&crop=smart&auto=webp&s=0e4291886619c7c6227ab7d09c66d70ee6f4d1d4", width=300, height=200)
+    page.add(
+    ft.Column(
+        controls=[
+            ft.Row(
+                controls=[image],
+                alignment=ft.MainAxisAlignment.CENTER
+            ),
+            ft.Row(
+                controls=[
+                    ft.ElevatedButton(text="Cadastrar", on_click=create, bgcolor="white", color="red"),
+                    ft.ElevatedButton(text="Listar", on_click=get, bgcolor="white", color="red")
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            )
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,  
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,  
+        expand=True  
+    )
+)
+
+
+
 
     page.update()
 
