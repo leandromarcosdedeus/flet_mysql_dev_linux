@@ -21,25 +21,38 @@ def main(page: Page):
 
 
         dynamic_fields = [ft.TextField(label=i, width=200) for i in headers]
+        dynamic_fields.append(ft.TextField(label="confirm password", width=200))
         dynamic_fields.pop(0)
-        page.add(Column(controls=[
-             ft.Column(controls=[
-                 *dynamic_fields,
-             ],
-                  alignment=ft.MainAxisAlignment.CENTER,
-             ),
-             ft.Row( controls=[
-                    ft.ElevatedButton(text="Cadastrar", on_click=register, bgcolor="white", color="black"),
-                    ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="black")
-             ],
-                  alignment=ft.MainAxisAlignment.CENTER,
-             )
-            
-        ], alignment=ft.MainAxisAlignment.CENTER,
-         horizontal_alignment=ft.CrossAxisAlignment.CENTER,  
-        expand=True  ),
-        )
 
+        page.add(ft.Column(controls=[
+            ft.Text(
+                "Cadastro de Funcionário",
+                size=25,  
+                weight=ft.FontWeight.BOLD,  
+                color="black",  
+                text_align=ft.TextAlign.CENTER,  
+            ),
+            ft.Column(
+                controls=[
+                    *dynamic_fields,
+                ],
+                alignment=ft.MainAxisAlignment.CENTER, 
+            ),
+            ft.Row(
+                controls=[
+                    ft.ElevatedButton(text="Cadastrar", on_click=register, bgcolor="white", color="black"),
+                    ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="black"),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,  
+            spacing=25,  # Espaçamento entre os elementos
+            expand=True,
+        ))
+
+       
         page.update()
         
     def editar(e, id, name, email):
@@ -135,7 +148,7 @@ def main(page: Page):
                     ],
                     height=400,  
                 ),
-            ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="red")
+            ft.ElevatedButton(text="Voltar", on_click=show_main_layout, bgcolor="white", color="black")
         ])
         )
         page.update()
